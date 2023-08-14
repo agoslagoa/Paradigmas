@@ -1,8 +1,6 @@
 module Tunel ( Tunel, newT, connectsT, usesT, delayT )
    where
 
-import Link 
-
 data Tunel = Tun [Link] deriving (Eq, Show)
 
 newT :: [Link] -> Tunel

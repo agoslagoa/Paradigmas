@@ -1,8 +1,6 @@
 module Link ( Link, newL, linksL, connectsL, capacityL, delayL )
    where
 
-import City 
-
 data Link = Lin City City Quality deriving (Eq, Show)
 
 newL :: City -> City -> Quality -> Link -- genera un link entre dos ciudades distintas

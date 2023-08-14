@@ -1,3 +1,4 @@
+import City
 import Point
 
 main :: IO ()

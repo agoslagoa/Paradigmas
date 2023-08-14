@@ -1,8 +1,6 @@
 module Quality ( Quality, newQ, capacityQ, delayQ )
    where
 
-import City 
-
 data Quality = Qua String Int Float deriving (Eq, Show)
 
 newQ :: String -> Int -> Float -> Quality

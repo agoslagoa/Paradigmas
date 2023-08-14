@@ -1,8 +1,6 @@
 module Region ( Region, newR, foundR, linkR, tunelR, pathR, linksForR, connectedR, linkedR, delayR, availableCapacityForR, usedCapacityForR )
    where
 
-import City 
-
 data Region = Reg [City] [Link] [Tunel]
 newR :: Region
 foundR :: Region -> City -> Region -- agrega una nueva ciudad a la región
