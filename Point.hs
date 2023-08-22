@@ -8,11 +8,3 @@ newPoint :: Int -> Int -> Point
 newPoint = Poi
 distanceBetweenPoints :: Point -> Point -> Float  -- distancia absoluta
 distanceBetweenPoints (Poi x1 y1) (Poi x2 y2) = sqrt (fromIntegral (x1- x2)^2 + fromIntegral (y1 - y2)^2)
-
-ubicacionRadaTilly = newPoint 1 0
-ubicacionComodoro = newPoint 2 0 
-
-t = [ ubicacionRadaTilly == newPoint 1 0, 
-      ubicacionComodoro == newPoint 2 0,
-      distanceBetweenPoints ubicacionRadaTilly ubicacionComodoro == 1.0,
-      True]

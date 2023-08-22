@@ -7,9 +7,9 @@ import Tunel
 import Data.List
 
 data Region = Reg
-    { cities :: [City]
-    , links :: [Link]
-    , tunnels :: [Tunel]
+    { cities :: [City], 
+      links :: [Link], 
+      tunnels :: [Tunel]
     } deriving (Show)
 
 
@@ -66,5 +66,12 @@ calculateConnectionDelay (Reg _ links tunnels) startCity endCity
                   [] -> Nothing
                   delays -> Just (minimum delays)
 
+usedCapacity :: [Tunel] -> Link -> Int
+usedCapacity tunnels link = length [t | t <- tunnels, tunnelThroughLink link t]
+
+availableCapacityForLink :: [Tunel] -> Link -> Int
+availableCapacityForLink tunnels link = linkCapacity link - usedCapacity tunnels link
+
 availableCapacityForRegion :: Region -> City -> City -> Int -- indica la capacidad disponible entre dos ciudades
-availableCapacityForRegion (Reg _ links _) cityA cityB = sum [linkCapacity link | link <- links, linksCities cityA cityB link]
+availableCapacityForRegion (Reg _ links tunnels) cityA cityB =
+    sum [availableCapacityForLink tunnels link | link <- links, linksCities cityA cityB link]
