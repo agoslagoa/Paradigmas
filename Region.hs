@@ -1,4 +1,4 @@
-module Region ( Region, newRegion, addCityToRegion, createLinkBetweenCities, createTunnelBetweenCities, verifyConnectionByTunnel, verifyConnectionByLink, calculateConnectionDelay, availableCapacityForRegion)
+module Region ( Region, newRegion, addCityToRegion, addCitiesToRegion, createLinkBetweenCities, addLinksToRegion, createTunnelBetweenCities, addTunnelsToRegion, verifyConnectionByTunnel, verifyConnectionByLink, calculateConnectionDelay, availableCapacityForRegion)
    where
 import City
 import Link
@@ -7,8 +7,8 @@ import Tunel
 import Data.List
 
 data Region = Reg
-    { cities :: [City], 
-      links :: [Link], 
+    { cities :: [City],
+      links :: [Link],
       tunnels :: [Tunel]
     } deriving (Show)
 
@@ -31,6 +31,8 @@ addCityToRegion (Reg cities links tunnels) newCity
     coordinatesInUse _ [] = False
     coordinatesInUse c (c':cs) = cityCoordinates c == cityCoordinates c' || coordinatesInUse c cs
 
+addCitiesToRegion :: Region -> [City] -> Region -- agrega una lista de ciudades a la región
+addCitiesToRegion = foldl addCityToRegion
 
 createLinkBetweenCities :: Region -> City -> City -> Quality -> Region -- enlaza dos ciudades de la región con un enlace de la calidad indicada
 createLinkBetweenCities (Reg ciudades links tuneles) cityA cityB quality
@@ -39,6 +41,13 @@ createLinkBetweenCities (Reg ciudades links tuneles) cityA cityB quality
   where
     link = newLink cityA cityB quality
     newLinks = link : links
+
+addLinksToRegion :: Region -> [Link] -> Region
+addLinksToRegion region linksToAdd = region { links = updatedLinks }
+  where
+    existingLinks = links region
+    newLinks = filter (\link -> not $ link `elem` existingLinks) linksToAdd
+    updatedLinks = existingLinks ++ newLinks
 
 createTunnelBetweenCities :: Region -> [City] -> Region -- genera una comunicación entre dos ciudades distintas de la región
 createTunnelBetweenCities region [] = region
@@ -49,7 +58,14 @@ createTunnelBetweenCities region (cityA:cityB:rest) =
             where
                 newTunel = newTunnel [link]
         Nothing -> createTunnelBetweenCities region (cityB:rest)
-        
+
+addTunnelsToRegion :: Region -> [Tunel] -> Region
+addTunnelsToRegion region tunnelsToAdd = region { tunnels = updatedTunnels }
+  where
+    existingTunnels = tunnels region
+    newTunnels = filter (\tunnel -> not $ tunnel `elem` existingTunnels) tunnelsToAdd
+    updatedTunnels = existingTunnels ++ newTunnels
+
 findLink :: Region -> City -> City -> Maybe Link
 findLink (Reg _ links _) cityA cityB = find (linksCities cityA cityB) links
 

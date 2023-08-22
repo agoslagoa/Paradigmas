@@ -17,6 +17,8 @@ comodoro = newCity "Comodoro Rivadavia" comodoroLocation
 rawson = newCity "Rawson" rawsonLocation
 puertoMadryn = newCity "Puerto Madryn" puertoMadrynLocation
 
+addCitiesToChubut = addCitiesToRegion chubut [radaTilly, comodoro, rawson, puertoMadryn] --utilizar con la lista de ciudades de la región vacía
+
 radaComodoroQuality = newQuality "cobre" 3 35.25878 --delay en microsegundos
 comodoroRawsonQuality = newQuality "fibra" 6 40.25878 --delay en microsegundos
 
@@ -24,9 +26,13 @@ linkRadaComodoro = newLink radaTilly comodoro radaComodoroQuality
 linkComodoroRawson = newLink comodoro rawson comodoroRawsonQuality
 linkRawsonPuertoMadryn = newLink rawson puertoMadryn comodoroRawsonQuality
 
+addLinksToChubut = addLinksToRegion chubut [linkRadaComodoro, linkComodoroRawson, linkRawsonPuertoMadryn]
+
 tunnelRadaComodoro = newTunnel [linkRadaComodoro]
 tunnelRadaRawson = newTunnel [linkRadaComodoro, linkComodoroRawson] 
 tunnelRawsonPuertoMadryn = newTunnel [linkComodoroRawson, linkRawsonPuertoMadryn]
+
+addTunnelsToChubut = addTunnelsToRegion chubut [tunnelRadaComodoro, tunnelRadaRawson, tunnelRawsonPuertoMadryn]
 
 testRegionConnection = [
                   availableCapacityForRegion chubut radaTilly comodoro == 1,
