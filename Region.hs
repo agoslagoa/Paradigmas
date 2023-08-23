@@ -6,15 +6,10 @@ import Quality
 import Tunel
 import Data.List
 
-data Region = Reg
-    { cities :: [City],
-      links :: [Link],
-      tunnels :: [Tunel]
-    } deriving (Show)
+data Region = Reg [City] [Link] [Tunel] deriving (Show)
 
-
-newRegion :: [City] -> [Link] -> [Tunel] -> Region
-newRegion = Reg
+newRegion :: Region 
+newRegion = Reg [] [] []  
 
 addCityToRegion :: Region -> City -> Region  -- agrega una nueva ciudad a la región
 addCityToRegion (Reg cities links tunnels) newCity
@@ -42,35 +37,64 @@ createLinkBetweenCities (Reg ciudades links tuneles) cityA cityB quality
     link = newLink cityA cityB quality
     newLinks = link : links
 
+-- addLinksToRegion :: Region -> [Link] -> Region
+-- addLinksToRegion region linksToAdd = region { links = updatedLinks }
+--   where
+--     existingLinks = links region
+--     newLinks = filter (\link -> not $ link `elem` existingLinks) linksToAdd
+--     updatedLinks = existingLinks ++ newLinks
+
 addLinksToRegion :: Region -> [Link] -> Region
-addLinksToRegion region linksToAdd = region { links = updatedLinks }
+addLinksToRegion (Reg cities existingLinks tunnels) linksToAdd =
+    Reg cities updatedLinks tunnels
   where
-    existingLinks = links region
     newLinks = filter (\link -> not $ link `elem` existingLinks) linksToAdd
     updatedLinks = existingLinks ++ newLinks
+
+-- createTunnelBetweenCities :: Region -> [City] -> Region -- genera una comunicación entre dos ciudades distintas de la región
+-- createTunnelBetweenCities region [] = region
+-- createTunnelBetweenCities region (_:[]) = region
+-- createTunnelBetweenCities region (cityA:cityB:rest) =
+--     case (findLink region cityA cityB) of
+--         (Just link) -> createTunnelBetweenCities (Reg (cities region) (links region) (newTunel : tunnels region)) (cityB:rest)
+--             where
+--                 newTunel = newTunnel [link]
+--         Nothing -> createTunnelBetweenCities region (cityB:rest)
 
 createTunnelBetweenCities :: Region -> [City] -> Region -- genera una comunicación entre dos ciudades distintas de la región
 createTunnelBetweenCities region [] = region
 createTunnelBetweenCities region (_:[]) = region
 createTunnelBetweenCities region (cityA:cityB:rest) =
     case (findLink region cityA cityB) of
-        (Just link) -> createTunnelBetweenCities (Reg (cities region) (links region) (newTunel : tunnels region)) (cityB:rest)
+        (Just link) -> createTunnelBetweenCities updatedRegion (cityB:rest)
             where
                 newTunel = newTunnel [link]
+                updatedRegion = addTunnelsToRegion region [newTunel]
         Nothing -> createTunnelBetweenCities region (cityB:rest)
 
+-- addTunnelsToRegion :: Region -> [Tunel] -> Region
+-- addTunnelsToRegion region tunnelsToAdd = region { tunnels = updatedTunnels }
+--   where
+--     existingTunnels = tunnels region
+--     newTunnels = filter (\tunnel -> not $ tunnel `elem` existingTunnels) tunnelsToAdd
+--     updatedTunnels = existingTunnels ++ newTunnels
+
 addTunnelsToRegion :: Region -> [Tunel] -> Region
-addTunnelsToRegion region tunnelsToAdd = region { tunnels = updatedTunnels }
+addTunnelsToRegion (Reg cities links existingTunnels) tunnelsToAdd =
+    Reg cities links updatedTunnels
   where
-    existingTunnels = tunnels region
     newTunnels = filter (\tunnel -> not $ tunnel `elem` existingTunnels) tunnelsToAdd
     updatedTunnels = existingTunnels ++ newTunnels
 
 findLink :: Region -> City -> City -> Maybe Link
 findLink (Reg _ links _) cityA cityB = find (linksCities cityA cityB) links
 
-verifyConnectionByTunnel :: Region -> City -> City -> Bool -- indica si estas dos ciudades estan conectadas por un tunel
-verifyConnectionByTunnel region cityA cityB = any (tunnelConnectsCities cityA cityB) (tunnels region)
+-- verifyConnectionByTunnel :: Region -> City -> City -> Bool -- indica si estas dos ciudades estan conectadas por un tunel
+-- verifyConnectionByTunnel region cityA cityB = any (tunnelConnectsCities cityA cityB) (tunnels region)
+
+verifyConnectionByTunnel :: Region -> City -> City -> Bool
+verifyConnectionByTunnel (Reg _ _ tunnels) cityA cityB =
+    any (tunnelConnectsCities cityA cityB) tunnels
 
 verifyConnectionByLink :: Region -> City -> City -> Bool -- indica si estas dos ciudades estan enlazadas
 verifyConnectionByLink (Reg _ links _) cityA cityB = any (linksCities cityA cityB) links
