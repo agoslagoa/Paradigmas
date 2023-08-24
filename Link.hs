@@ -1,4 +1,4 @@
-module Link ( Link, newLink, linksCities, linkIncludesCity, linkCapacity, linkDelay, isInFirstLink, isInLastLink )
+module Link ( Link, newLink, linksCities, linkIncludesCity, linkCapacity, linkDelay )
    where
 
 import City 
@@ -17,19 +17,9 @@ linksCities :: City -> City -> Link -> Bool -- indica si estas dos ciudades dist
 linksCities cityA cityB (Lin city1 city2 _) = (cityA == city1 && cityB == city2) || (cityB == city1 && cityA == city2)
 
 linkCapacity :: Link -> Int
-linkCapacity (Lin _ _ quality) = qualityTunnelCapacity quality -- en velocidad (distancia entre dos ciudades / delay)
+linkCapacity (Lin _ _ quality) = qualityTunnelCapacity quality 
 
-linkDelay :: Link -> Float     -- la demora que sufre una conexion en este canal (en tiempo)   
-linkDelay (Lin _ _ delay) = qualityDelay delay 
-
-isInFirstLink :: City -> [Link] -> Bool
-isInFirstLink city (firstLink : secondLink : _) =
-    linkIncludesCity city firstLink && not (linkIncludesCity city secondLink)
-isInFirstLink _ _ = False
-
-isInLastLink :: City -> [Link] -> Bool
-isInLastLink city links =
-    case reverse links of
-        (lastLink : secondLastLink : _) ->
-            linkIncludesCity city lastLink && not (linkIncludesCity city secondLastLink)
-        _ -> False
+linkDelay :: Link -> Float     -- la demora que sufre una conexion en este canal (en tiempo)
+linkDelay (Lin city1 city2 quality)
+    | qualityDelay quality == 0 = error "Quality delay cannot be zero"
+    | otherwise = distanceBetweenCities city1 city2 / qualityDelay quality
