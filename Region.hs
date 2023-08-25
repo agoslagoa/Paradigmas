@@ -19,11 +19,11 @@ addCityToRegion (Reg cities links tunnels) newCity
     | otherwise =
         Reg (newCity : cities) links tunnels
   where
-    cityExists :: City -> [City] -> Bool -- (auxiliar)
+    cityExists :: City -> [City] -> Bool 
     cityExists _ [] = False
     cityExists city (c : cs) = (cityName city == cityName c) || cityExists city cs
 
-    coordinatesInUse :: City -> [City] -> Bool -- (auxiliar)
+    coordinatesInUse :: City -> [City] -> Bool 
     coordinatesInUse _ [] = False
     coordinatesInUse city (c : cs) = distanceBetweenCities city c == 0.0 || coordinatesInUse city cs
 
@@ -72,7 +72,7 @@ calculateConnectionDelay (Reg _ links _) startCity endCity
                   [] -> 0.0
                   delays -> minimum delays
   where
-    linkConnectsCities :: Link -> Bool -- (auxiliar)
+    linkConnectsCities :: Link -> Bool 
     linkConnectsCities link = linkIncludesCity startCity link && linkIncludesCity endCity link
 
 
