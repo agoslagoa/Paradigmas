@@ -20,6 +20,4 @@ linkCapacity :: Link -> Int
 linkCapacity (Lin _ _ quality) = qualityTunnelCapacity quality 
 
 linkDelay :: Link -> Float     -- la demora que sufre una conexion en este canal 
-linkDelay (Lin city1 city2 quality)
-    | qualityDelay quality == 0 = error "Quality delay cannot be zero"
-    | otherwise = distanceBetweenCities city1 city2 / qualityDelay quality
+linkDelay (Lin city1 city2 quality) = distanceBetweenCities city1 city2 / qualityDelay quality

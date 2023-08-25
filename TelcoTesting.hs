@@ -16,12 +16,12 @@ comodoro = newCity "Comodoro Rivadavia" comodoroLocation
 rawson = newCity "Rawson" rawsonLocation
 puertoMadryn = newCity "Puerto Madryn" puertoMadrynLocation
 
-radaComodoroQuality = newQuality "cobre" 3 35.25878 --delay en microsegundos
-comodoroRawsonQuality = newQuality "fibra" 6 40.25878 --delay en microsegundos
+cobreQuality = newQuality "cobre" 3 35.25878 --delay en microsegundos
+fibraQuality = newQuality "fibra" 6 40.25878 --delay en microsegundos
 
-linkRadaComodoro = newLink radaTilly comodoro radaComodoroQuality
-linkComodoroRawson = newLink comodoro rawson comodoroRawsonQuality
-linkRawsonPuertoMadryn = newLink rawson puertoMadryn comodoroRawsonQuality
+linkRadaComodoro = newLink radaTilly comodoro cobreQuality
+linkComodoroRawson = newLink comodoro rawson fibraQuality
+linkRawsonPuertoMadryn = newLink rawson puertoMadryn fibraQuality
 
 tunnelRadaComodoro = newTunnel [linkRadaComodoro]
 tunnelRadaRawson = newTunnel [linkRadaComodoro, linkComodoroRawson]
@@ -37,9 +37,9 @@ chubut = createTunnelBetweenCities
                                     (addCityToRegion
                                         (addCityToRegion
                                             (addCityToRegion newRegion puertoMadryn) rawson) comodoro) radaTilly)
-                            rawson puertoMadryn comodoroRawsonQuality)
-                        comodoro rawson comodoroRawsonQuality)
-                    radaTilly comodoro radaComodoroQuality)
+                            rawson puertoMadryn fibraQuality)
+                        comodoro rawson fibraQuality)
+                    radaTilly comodoro cobreQuality)
                 [radaTilly, comodoro])
             [radaTilly, comodoro, rawson])
         [comodoro, rawson, puertoMadryn]
@@ -82,7 +82,7 @@ testCities = [
                   cityName radaTilly == "Rada Tilly",
                   cityName comodoro == "Comodoro Rivadavia",
                   distanceBetweenCities radaTilly comodoro == 31.112698,
-                  qualityTunnelCapacity radaComodoroQuality == 3,
+                  qualityTunnelCapacity cobreQuality == 3,
                   True
                   ]
 
