@@ -37,7 +37,7 @@ createLinkBetweenCities (Reg ciudades links tuneles) cityA cityB quality
 
 createTunnelBetweenCities :: Region -> [City] -> Region -- genera una comunicación entre dos ciudades distintas de la región
 createTunnelBetweenCities region [] = error "No es posible crear un túnel si no hay ciudades en la región"
-createTunnelBetweenCities region (_:[]) = error "No es posible crear un túnel con una sola ciudad"
+createTunnelBetweenCities region [_] = error "No es posible crear un túnel con una sola ciudad"
 createTunnelBetweenCities region cities@(cityA:cityB:rest) =
     case findLink region cityA cityB of
         Just link -> updatedRegion
