@@ -1,4 +1,4 @@
-module City ( City, newCity, cityName, distanceBetweenCities, cityCoordinates )
+module City ( City, newCity, cityName, distanceBetweenCities )
    where
 
 import Point
@@ -13,6 +13,3 @@ cityName (Cit name _ ) = name
 
 distanceBetweenCities :: City -> City -> Float -- proyecta las distancia que se obtiene de las coordenadas de cada ciudad 
 distanceBetweenCities (Cit _ pointA) (Cit _ pointB) = distanceBetweenPoints pointA pointB 
-
-cityCoordinates :: City -> Point -- (auxiliar)
-cityCoordinates (Cit _ point) = point

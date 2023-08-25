@@ -6,10 +6,10 @@ import Tunel
 import Region
 
 
-radaTillyLocation = newPoint 1 0
-comodoroLocation = newPoint 7 2
-rawsonLocation = newPoint 10 5
-puertoMadrynLocation = newPoint 12 4
+radaTillyLocation = newPoint 67 45
+comodoroLocation = newPoint 45 67
+rawsonLocation = newPoint 65 43
+puertoMadrynLocation = newPoint 42 65
 
 radaTilly = newCity "Rada Tilly" radaTillyLocation
 comodoro = newCity "Comodoro Rivadavia" comodoroLocation
@@ -28,23 +28,28 @@ tunnelRadaRawson = newTunnel [linkRadaComodoro, linkComodoroRawson]
 tunnelRawsonPuertoMadryn = newTunnel [linkComodoroRawson, linkRawsonPuertoMadryn]
 
 chubut = createTunnelBetweenCities
-    (createTunnelBetweenCities
-        (createTunnelBetweenCities
-                (createLinkBetweenCities
+            (createTunnelBetweenCities
+                (createTunnelBetweenCities
+                    (createLinkBetweenCities
                         (createLinkBetweenCities
                             (createLinkBetweenCities
                                 (addCityToRegion
                                     (addCityToRegion
                                         (addCityToRegion
                                             (addCityToRegion newRegion puertoMadryn) rawson) comodoro) radaTilly)
-                                rawson puertoMadryn comodoroRawsonQuality) comodoro rawson comodoroRawsonQuality)
-                            radaTilly comodoro radaComodoroQuality) [radaTilly, comodoro]) [radaTilly, comodoro, rawson]) [comodoro, rawson, puertoMadryn]
+                            rawson puertoMadryn comodoroRawsonQuality)
+                        comodoro rawson comodoroRawsonQuality)
+                    radaTilly comodoro radaComodoroQuality)
+                [radaTilly, comodoro])
+            [radaTilly, comodoro, rawson])
+        [comodoro, rawson, puertoMadryn]
+
 
 testRegionConnection = [
                   availableCapacityForRegion chubut radaTilly comodoro == 1,
                   availableCapacityForRegion chubut comodoro rawson == 4,
                   availableCapacityForRegion chubut comodoro puertoMadryn == 0,
-                  calculateConnectionDelay chubut radaTilly comodoro == 0.17937532,
+                  calculateConnectionDelay chubut radaTilly comodoro == 0.8824099,
                   calculateConnectionDelay chubut radaTilly puertoMadryn == 0.0,
                   verifyConnectionByLink chubut radaTilly comodoro,
                   not (verifyConnectionByLink chubut radaTilly puertoMadryn),
@@ -57,20 +62,17 @@ testRegionConnection = [
 
 testConnectionByLink = [
                   linkCapacity linkRadaComodoro == 3,
-                  linkDelay linkRadaComodoro == 0.17937532,
+                  linkDelay linkRadaComodoro == 0.8824099,
                   linkIncludesCity radaTilly linkRadaComodoro,
                   linksCities radaTilly comodoro linkRadaComodoro,
-                --   isInFirstLink radaTilly [linkRadaComodoro, linkComodoroRawson],
-                --   not (isInFirstLink radaTilly [linkComodoroRawson, linkRawsonPuertoMadryn]),
-                --   isInLastLink puertoMadryn [linkComodoroRawson, linkRawsonPuertoMadryn],
-                --   not (isInLastLink rawson [linkComodoroRawson, linkRawsonPuertoMadryn]),
                   True
                   ]
 
 testConnectionByTunnel = [
-                  tunnelDelay tunnelRadaRawson == 0.28475955,
+                  tunnelDelay tunnelRadaRawson == 1.6584145,
+                  tunnelConnectsCities radaTilly comodoro tunnelRadaComodoro, -- True pues las ciudades especificadas son los extremos del túnel
                   tunnelConnectsCities radaTilly rawson tunnelRadaRawson,
-                  not (tunnelConnectsCities radaTilly comodoro tunnelRadaRawson),
+                  not (tunnelConnectsCities radaTilly comodoro tunnelRadaRawson), -- False pues las ciudades especificadas no son los extremos del túnel
                   tunnelThroughLink linkRadaComodoro tunnelRadaRawson,
                   not (tunnelThroughLink linkRawsonPuertoMadryn tunnelRadaRawson),
                   True
@@ -79,9 +81,7 @@ testConnectionByTunnel = [
 testCities = [
                   cityName radaTilly == "Rada Tilly",
                   cityName comodoro == "Comodoro Rivadavia",
-                  cityCoordinates radaTilly == newPoint 1 0,
-                  cityCoordinates comodoro == newPoint 7 2,
-                  distanceBetweenCities radaTilly comodoro == 6.3245554,
+                  distanceBetweenCities radaTilly comodoro == 31.112698,
                   qualityTunnelCapacity radaComodoroQuality == 3,
                   True
                   ]

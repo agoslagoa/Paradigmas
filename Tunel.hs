@@ -23,12 +23,14 @@ tunnelDelay (Tun variosLinks) = sum [linkDelay link | link <- variosLinks]
 
 isInFirstLinkTunnel :: City -> [Link] -> Bool -- (auxiliar)
 isInFirstLinkTunnel _ [] = False
+isInFirstLinkTunnel city (firstLink : []) = linkIncludesCity city firstLink
 isInFirstLinkTunnel city (firstLink : secondLink : _) =
     linkIncludesCity city firstLink && not (linkIncludesCity city secondLink)
-isInFirstLinkTunnel _ _ = False
+
 
 isInLastLinkTunnel :: City -> [Link] -> Bool -- (auxiliar)
 isInLastLinkTunnel _ [] = False
+isInLastLinkTunnel city (lastLink : []) = linkIncludesCity city lastLink
 isInLastLinkTunnel city links =
     case reverse links of
         (lastLink : secondLastLink : _) ->
