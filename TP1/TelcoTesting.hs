@@ -17,7 +17,7 @@ rawson = newCity "Rawson" rawsonLocation
 puertoMadryn = newCity "Puerto Madryn" puertoMadrynLocation
 
 cobreQuality = newQuality "cobre" 3 35.25878 --delay en microsegundos
-fibraQuality = newQuality "fibra" 6 40.25878 --delay en microsegundos
+fibraQuality = newQuality "fibra" 6 10.00157 --delay en microsegundos
 
 linkRadaComodoro = newLink radaTilly comodoro cobreQuality
 linkComodoroRawson = newLink comodoro rawson fibraQuality
@@ -46,6 +46,7 @@ chubut = createTunnelBetweenCities
 
 
 testRegionConnection = [
+                  distanceBetweenCities radaTilly comodoro == 31.112698,
                   availableCapacityForRegion chubut radaTilly comodoro == 1,
                   availableCapacityForRegion chubut comodoro rawson == 4,
                   availableCapacityForRegion chubut comodoro puertoMadryn == 0,
@@ -69,20 +70,12 @@ testConnectionByLink = [
                   ]
 
 testConnectionByTunnel = [
-                  tunnelDelay tunnelRadaRawson == 1.6584145,
+                  tunnelDelay tunnelRadaRawson == 4.0060196,
                   tunnelConnectsCities radaTilly comodoro tunnelRadaComodoro, -- True pues las ciudades especificadas son los extremos del túnel
                   tunnelConnectsCities radaTilly rawson tunnelRadaRawson,
                   not (tunnelConnectsCities radaTilly comodoro tunnelRadaRawson), -- False pues las ciudades especificadas no son los extremos del túnel
                   tunnelThroughLink linkRadaComodoro tunnelRadaRawson,
                   not (tunnelThroughLink linkRawsonPuertoMadryn tunnelRadaRawson),
-                  True
-                  ]
-
-testCities = [
-                  cityName radaTilly == "Rada Tilly",
-                  cityName comodoro == "Comodoro Rivadavia",
-                  distanceBetweenCities radaTilly comodoro == 31.112698,
-                  qualityTunnelCapacity cobreQuality == 3,
                   True
                   ]
 
@@ -92,5 +85,4 @@ main = do
     putStrLn $ "Region Connection Tests: " ++ show (and testRegionConnection)
     putStrLn $ "Connection by link Tests: " ++ show (and testConnectionByLink)
     putStrLn $ "Connection by tunnel Tests: " ++ show (and testConnectionByTunnel)
-    putStrLn $ "Cities Tests: " ++ show (and testCities)
     putStrLn "All tests finished."

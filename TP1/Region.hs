@@ -38,6 +38,17 @@ createLinkBetweenCities (Reg ciudades links tuneles) cityA cityB quality
 createTunnelBetweenCities :: Region -> [City] -> Region -- genera una comunicación entre dos ciudades distintas de la región
 createTunnelBetweenCities region [] = error "No es posible crear un túnel si no hay ciudades en la región"
 createTunnelBetweenCities region [_] = error "No es posible crear un túnel con una sola ciudad"
+<<<<<<< HEAD:Region.hs
+createTunnelBetweenCities region cities@(cityA:cityB:rest)
+    | not (all areLinked pairsOfCities) = error "No es posible crear un túnel entre ciudades no linkeadas"
+    | otherwise = updatedRegion
+  where
+    pairsOfCities = zip cities (tail cities)
+    areLinked (c1, c2) = isJust $ findLink region c1 c2
+    validLinks = mapMaybe (uncurry $ findLink region) pairsOfCities
+    tunnel = newTunnel validLinks
+    updatedRegion = addTunnelsToRegion region [tunnel]
+=======
 createTunnelBetweenCities region cities@(cityA:cityB:rest) =
     case findLink region cityA cityB of
         Just link -> updatedRegion
@@ -46,12 +57,13 @@ createTunnelBetweenCities region cities@(cityA:cityB:rest) =
                 tunnel = newTunnel links -- Crear un túnel con los enlaces
                 updatedRegion = addTunnelsToRegion region [tunnel]
         Nothing -> createTunnelBetweenCities region (cityB:rest)
+>>>>>>> 7c7ccee278d99256c3dadea4282717f7b4c5e6c5:TP1/Region.hs
 
 addTunnelsToRegion :: Region -> [Tunel] -> Region -- (auxiliar)
 addTunnelsToRegion (Reg cities links existingTunnels) tunnelsToAdd =
     Reg cities links updatedTunnels
   where
-    newTunnels = filter (\tunnel -> not $ tunnel `elem` existingTunnels) tunnelsToAdd
+    newTunnels = filter (`notElem` existingTunnels) tunnelsToAdd
     updatedTunnels = existingTunnels ++ newTunnels
 
 findLink :: Region -> City -> City -> Maybe Link -- (auxiliar)
@@ -73,7 +85,6 @@ calculateConnectionDelay (Reg _ links _) startCity endCity
   where
     linkConnectsCities :: Link -> Bool
     linkConnectsCities link = linkIncludesCity startCity link && linkIncludesCity endCity link
-
 
 usedCapacity :: [Tunel] -> Link -> Int -- (auxiliar)
 usedCapacity tunnels link = length [t | t <- tunnels, tunnelThroughLink link t]
