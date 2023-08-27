@@ -35,19 +35,21 @@ createLinkBetweenCities (Reg ciudades links tuneles) cityA cityB quality
     link = newLink cityA cityB quality
     newLinks = if link `elem` links then links else link : links
 
-createTunnelBetweenCities :: Region -> [City] -> Region -- genera una comunicación entre dos ciudades distintas de la región
+createTunnelBetweenCities :: Region -> [City] -> Region
 createTunnelBetweenCities region [] = error "No es posible crear un túnel si no hay ciudades en la región"
 createTunnelBetweenCities region [_] = error "No es posible crear un túnel con una sola ciudad"
-
 createTunnelBetweenCities region cities@(cityA:cityB:rest)
     | not (all areLinked pairsOfCities) = error "No es posible crear un túnel entre ciudades no linkeadas"
+    | not (all canCreateTunnel validLinks) = error "No hay suficiente capacidad en algún enlace para crear el túnel"
     | otherwise = updatedRegion
   where
     pairsOfCities = zip cities (tail cities)
     areLinked (c1, c2) = isJust $ findLink region c1 c2
     validLinks = mapMaybe (uncurry $ findLink region) pairsOfCities
+    canCreateTunnel link = availableCapacityForLink (tunnels region) link > 0
     tunnel = newTunnel validLinks
     updatedRegion = addTunnelsToRegion region [tunnel]
+
 
 addTunnelsToRegion :: Region -> [Tunel] -> Region -- (auxiliar)
 addTunnelsToRegion (Reg cities links existingTunnels) tunnelsToAdd =
