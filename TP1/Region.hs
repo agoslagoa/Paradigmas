@@ -50,7 +50,6 @@ createTunnelBetweenCities region cities@(cityA:cityB:rest)
     tunnel = newTunnel validLinks
     updatedRegion = addTunnelsToRegion region [tunnel]
 
-
 addTunnelsToRegion :: Region -> [Tunel] -> Region -- (auxiliar)
 addTunnelsToRegion (Reg cities links existingTunnels) tunnelsToAdd =
     Reg cities links updatedTunnels
