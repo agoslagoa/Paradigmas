@@ -40,15 +40,17 @@ createTunnelBetweenCities region [] = error "No es posible crear un túnel si no
 createTunnelBetweenCities region [_] = error "No es posible crear un túnel con una sola ciudad"
 createTunnelBetweenCities region cities@(cityA:cityB:rest)
     | not (all areLinked pairsOfCities) = error "No es posible crear un túnel entre ciudades no linkeadas"
-    | not (all canCreateTunnel validLinks) = error "No hay suficiente capacidad en algún enlace para crear el túnel"
+    | any (capacityExhausted region) validLinks = error "No hay suficiente capacidad en algún enlace para crear el túnel"
     | otherwise = updatedRegion
   where
     pairsOfCities = zip cities (tail cities)
     areLinked (c1, c2) = isJust $ findLink region c1 c2
     validLinks = mapMaybe (uncurry $ findLink region) pairsOfCities
-    canCreateTunnel link = availableCapacityForLink (tunnels region) link > 0
     tunnel = newTunnel validLinks
     updatedRegion = addTunnelsToRegion region [tunnel]
+
+capacityExhausted :: Region -> Link -> Bool -- (auxiliar)
+capacityExhausted (Reg _ _ tunnels) link = availableCapacityForLink tunnels link <= 0
 
 addTunnelsToRegion :: Region -> [Tunel] -> Region -- (auxiliar)
 addTunnelsToRegion (Reg cities links existingTunnels) tunnelsToAdd =
