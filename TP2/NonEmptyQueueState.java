@@ -10,21 +10,13 @@ public class NonEmptyQueueState extends QueueState {
 
     @Override
     public Object take(ArrayList<Object> objects) {
-    	return objects.remove(0); 
-    }
-
-    @Override
-    public QueueState stateTransitionOnAdd() {
-        return this;
-    }
-
-    @Override
-    public QueueState stateTransitionOnTake(ArrayList<Object> objects) {
-        return QueueStateFactory.getState(objects.isEmpty());
+        Object firstElement = objects.get(0);
+        objects.remove(0);
+        return firstElement;
     }
 
     @Override
     public boolean isEmpty() {
         return false;
     }
-} 
+}

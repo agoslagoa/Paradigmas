@@ -14,16 +14,6 @@ public class EmptyQueueState extends QueueState {
     }
 
     @Override
-    public QueueState stateTransitionOnAdd() {
-        return new NonEmptyQueueState();
-    }
-
-    @Override
-    public QueueState stateTransitionOnTake(ArrayList<Object> objects) { 
-        return this;
-    }
-
-    @Override
     public boolean isEmpty() {
         return true;
     }

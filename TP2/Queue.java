@@ -5,16 +5,18 @@ import java.util.ArrayList;
 public class Queue {
     private ArrayList<Object> objects = new ArrayList<>();
     private QueueState state = new EmptyQueueState();
-
+    private ArrayList<QueueState> stateMemory = new ArrayList<>();
+    
     public Queue add(Object cargo) {
         objects.add(cargo);
-        state = state.stateTransitionOnAdd();
+        stateMemory.add(state);
+        state = new NonEmptyQueueState();
         return this;
     }
 
     public Object take() {
-        Object element = state.take(objects);
-        state = state.stateTransitionOnTake(objects); 
+        Object element = state.take(objects); 
+        state = stateMemory.remove(stateMemory.size() -1);
         return element;
     }
 
@@ -23,7 +25,7 @@ public class Queue {
     }
 
     public int size() {
-        return objects.size();
+        return objects.size(); 
     }
 
     public boolean isEmpty() {
