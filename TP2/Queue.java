@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class Queue {
     private ArrayList<Object> objects = new ArrayList<>();
-    private QueueState state = new EmptyQueueState();
     private ArrayList<QueueState> stateMemory = new ArrayList<>();
+    private QueueState state = new EmptyQueueState();
     
     public Queue add(Object cargo) {
         objects.add(cargo);
