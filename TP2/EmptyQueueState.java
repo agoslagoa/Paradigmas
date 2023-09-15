@@ -2,7 +2,7 @@ package queue;
 
 import java.util.ArrayList;
 
-    public class EmptyQueueState extends QueueState {
+public class EmptyQueueState extends QueueState {
 	
     public static final String EmptyQueueMessage = "Queue is empty"; 
 	
