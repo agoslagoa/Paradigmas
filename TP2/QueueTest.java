@@ -55,15 +55,15 @@ public class QueueTest {
 	 }
 
 	 @Test public void test10CanNotTakeWhenThereAreNoObjectsInTheQueue() {
-	    assertEquals( EmptyQueueState.queueIsEmpty, assertThrows(Error.class, () -> new Queue().take()).getMessage() );
+	    assertEquals( EmptyQueueState.EmptyQueueMessage, assertThrows(Error.class, () -> new Queue().take()).getMessage() );
 	 } 
 
 	 @Test public void test09CanNotTakeWhenThereAreNoObjectsInTheQueueAndTheQueueHadObjects() {
-	    assertEquals( EmptyQueueState.queueIsEmpty , assertThrows(Error.class, () -> takeFromQueueWithSomething().take()).getMessage());
+	    assertEquals( EmptyQueueState.EmptyQueueMessage , assertThrows(Error.class, () -> takeFromQueueWithSomething().take()).getMessage());
 	 }
 
 	 @Test public void test10CanNotHeadWhenThereAreNoObjectsInTheQueue() {
-	    assertEquals(EmptyQueueState.queueIsEmpty, assertThrows(Error.class, () -> new Queue().head()).getMessage());
+	    assertEquals(EmptyQueueState.EmptyQueueMessage, assertThrows(Error.class, () -> new Queue().head()).getMessage());
 	 }
 	  
 	 private Queue queueWithSomething() {
@@ -84,4 +84,4 @@ public class QueueTest {
 	     queue.take();
 	     return queue;
 	}
-}
+} 
