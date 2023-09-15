@@ -56,15 +56,15 @@ public class QueueTest {
 	 }
 
 	 @Test public void test10CanNotTakeWhenThereAreNoObjectsInTheQueue() {
-		assertThrowsLike(() -> new Queue().take(), EmptyQueueState.EmptyQueueMessage);
+	    assertThrowsLike(() -> new Queue().take(), EmptyQueueState.EmptyQueueMessage);
 	 } 
 
 	 @Test public void test09CanNotTakeWhenThereAreNoObjectsInTheQueueAndTheQueueHadObjects() {
-		assertThrowsLike(() -> takeFromQueueWithSomething().take(), EmptyQueueState.EmptyQueueMessage);
+	    assertThrowsLike(() -> takeFromQueueWithSomething().take(), EmptyQueueState.EmptyQueueMessage);
 	 }
 
 	 @Test public void test10CanNotHeadWhenThereAreNoObjectsInTheQueue() {
-		assertThrowsLike(() -> new Queue().head(), EmptyQueueState.EmptyQueueMessage);
+	    assertThrowsLike(() -> new Queue().head(), EmptyQueueState.EmptyQueueMessage);
 	 }
 	  
 	 private Queue queueWithSomething() {
