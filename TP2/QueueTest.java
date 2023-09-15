@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 public class QueueTest {
 
@@ -33,14 +34,14 @@ public class QueueTest {
 	 }
 
 	 @Test public void test06QueueBehavesFIFO() {
-	    Queue queue = queueWithFirstAddedObjectAndSecondAddedObject();
+	    Queue queue = queueWithFirstAndSecondObjects();
 	    assertEquals( queue.take(), FirstAddedObject );
 	    assertEquals( queue.take(), SecondAddedObject );
 	    assertTrue( queue.isEmpty() );
 	 }
 
 	 @Test public void test07HeadReturnsFirstAddedObjectAddedObject() {
-	    assertEquals( queueWithFirstAddedObjectAndSecondAddedObject().head(), FirstAddedObject );
+	    assertEquals( queueWithFirstAndSecondObjects().head(), FirstAddedObject );
 	 }
 
 	 @Test public void test08HeadDoesNotRemoveObjectFromQueue() {
@@ -51,19 +52,19 @@ public class QueueTest {
 	 }
 
 	 @Test public void test09SizeRepresentsObjectInTheQueue() {
-	    assertEquals( 2, queueWithFirstAddedObjectAndSecondAddedObject().size() );
+	    assertEquals( 2, queueWithFirstAndSecondObjects().size() );
 	 }
 
 	 @Test public void test10CanNotTakeWhenThereAreNoObjectsInTheQueue() {
-	    assertEquals( EmptyQueueState.EmptyQueueMessage, assertThrows(Error.class, () -> new Queue().take()).getMessage() );
+		assertThrowsLike(() -> new Queue().take(), EmptyQueueState.EmptyQueueMessage);
 	 } 
 
 	 @Test public void test09CanNotTakeWhenThereAreNoObjectsInTheQueueAndTheQueueHadObjects() {
-	    assertEquals( EmptyQueueState.EmptyQueueMessage , assertThrows(Error.class, () -> takeFromQueueWithSomething().take()).getMessage());
+		assertThrowsLike(() -> takeFromQueueWithSomething().take(), EmptyQueueState.EmptyQueueMessage);
 	 }
 
 	 @Test public void test10CanNotHeadWhenThereAreNoObjectsInTheQueue() {
-	    assertEquals(EmptyQueueState.EmptyQueueMessage, assertThrows(Error.class, () -> new Queue().head()).getMessage());
+		assertThrowsLike(() -> new Queue().head(), EmptyQueueState.EmptyQueueMessage);
 	 }
 	  
 	 private Queue queueWithSomething() {
@@ -72,7 +73,7 @@ public class QueueTest {
 	     return queue;
 	 }
 	  
-	 private Queue queueWithFirstAddedObjectAndSecondAddedObject() {
+	 private Queue queueWithFirstAndSecondObjects() { 
 	     Queue queue = new Queue();
 	     queue.add( FirstAddedObject);
 	     queue.add( SecondAddedObject);
@@ -83,5 +84,9 @@ public class QueueTest {
 	     Queue queue = queueWithSomething();
 	     queue.take();
 	     return queue;
+	}
+	 
+	 private void assertThrowsLike( Executable e, String message ) {
+		 assertEquals( message, assertThrows( Error.class, e ).getMessage() );
 	}
 } 
