@@ -33,7 +33,7 @@ public class QueueTest {
 	 }
 
 	 @Test public void test06QueueBehavesFIFO() {
-		Queue queue = queueWithFirstAddedObjectAndSecondAddedObject();
+	    Queue queue = queueWithFirstAddedObjectAndSecondAddedObject();
 	    assertEquals( queue.take(), FirstAddedObject );
 	    assertEquals( queue.take(), SecondAddedObject );
 	    assertTrue( queue.isEmpty() );
@@ -44,7 +44,7 @@ public class QueueTest {
 	 }
 
 	 @Test public void test08HeadDoesNotRemoveObjectFromQueue() {
-		Queue queue = queueWithSomething(); 
+	    Queue queue = queueWithSomething(); 
 	    assertEquals( 1, queue.size() );
 	    queue.head();
 	    assertEquals( 1, queue.size() ); 
@@ -67,21 +67,21 @@ public class QueueTest {
 	 }
 	  
 	 private Queue queueWithSomething() {
-		Queue queue = new Queue();
-		queue.add( Something );
-		return queue;
+	     Queue queue = new Queue();
+	     queue.add( Something );
+	     return queue;
 	 }
 	  
 	 private Queue queueWithFirstAddedObjectAndSecondAddedObject() {
-		Queue queue = new Queue();
-		queue.add( FirstAddedObject);
-		queue.add( SecondAddedObject);
-		return queue;
+	     Queue queue = new Queue();
+	     queue.add( FirstAddedObject);
+	     queue.add( SecondAddedObject);
+	     return queue;
 	 }
 	  
 	 private Queue takeFromQueueWithSomething() {
-		Queue queue = queueWithSomething();
-		queue.take();
-		return queue;
+	     Queue queue = queueWithSomething();
+	     queue.take();
+	     return queue;
 	}
 }
