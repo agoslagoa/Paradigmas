@@ -4,9 +4,7 @@ import java.util.ArrayList;
 
 public class NonEmptyQueueState extends QueueState {
     @Override
-    public Object head(ArrayList<Object> objects) {
-        return objects.get(0);
-    }
+    public Object head(ArrayList<Object> objects) { return objects.get(0); }
 
     @Override
     public Object take(ArrayList<Object> objects) {
@@ -16,7 +14,5 @@ public class NonEmptyQueueState extends QueueState {
     }
 
     @Override
-    public boolean isEmpty() {
-        return false;
-    }
+    public boolean isEmpty() { return false; }
 }
