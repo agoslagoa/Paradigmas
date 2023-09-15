@@ -20,15 +20,9 @@ public class Queue {
         return element;
     }
 
-    public Object head() {
-        return state.head(objects);
-    }
+    public Object head() { return state.head(objects); }
 
-    public int size() {
-        return objects.size(); 
-    }
+    public int size() { return objects.size(); }
 
-    public boolean isEmpty() {
-        return state.isEmpty();
-    }
+    public boolean isEmpty() { return state.isEmpty(); }
 }
