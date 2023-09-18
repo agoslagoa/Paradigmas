@@ -36,7 +36,7 @@ public class QueueTest {
 	    assertTrue( queue.isEmpty() );
 	 }
 
-	 @Test public void test07HeadReturnsFirstAddedObjectAddedObject() {
+	 @Test public void test07HeadReturnsFirstAddedObject() {
 	    assertEquals( queueWithFirstAndSecondObjects().head(), "First" );
 	 }
 
