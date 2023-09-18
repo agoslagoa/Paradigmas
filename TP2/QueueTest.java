@@ -75,8 +75,8 @@ public class QueueTest {
 	  
 	 private Queue queueWithFirstAndSecondObjects() { 
 	     Queue queue = new Queue();
-	     queue.add( "First");
-	     queue.add( "Second");
+	     queue.add( "First" );
+	     queue.add( "Second" );
 	     return queue;
 	 }
 	 
