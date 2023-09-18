@@ -20,9 +20,11 @@ public class QueueTest {
 	 @Test public void test03AddedElementsIsAtHead() {
 	    assertEquals( "Something" , queueWithSomething().head() );
 	 }
-
+	 
 	 @Test public void test04TakeRemovesElementsFromTheQueue() {
-	    assertTrue( takeFromQueueWithSomething().isEmpty() );
+		Queue queue = queueWithSomething();
+		queue.take();
+		assertTrue( queue.isEmpty() );
 	 }
 
 	 @Test public void test05TakeReturnsLastAddedObject() {
@@ -56,7 +58,9 @@ public class QueueTest {
 	 } 
 
 	 @Test public void test09CanNotTakeWhenThereAreNoObjectsInTheQueueAndTheQueueHadObjects() {
-	    assertThrowsLike(() -> takeFromQueueWithSomething().take(), EmptyQueueState.EmptyQueueMessage);
+		Queue queue = queueWithSomething();
+		queue.take();
+		assertThrowsLike(() -> queue.take(), EmptyQueueState.EmptyQueueMessage);
 	 }
 
 	 @Test public void test10CanNotHeadWhenThereAreNoObjectsInTheQueue() {
@@ -75,12 +79,6 @@ public class QueueTest {
 	     queue.add( "Second");
 	     return queue;
 	 }
-	  
-	 private Queue takeFromQueueWithSomething() {
-	     Queue queue = queueWithSomething();
-	     queue.take();
-	     return queue;
-	}
 	 
 	 private void assertThrowsLike( Executable e, String message ) {
 		 assertEquals( message, assertThrows( Error.class, e ).getMessage() );
