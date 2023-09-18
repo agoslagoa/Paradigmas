@@ -22,9 +22,9 @@ public class QueueTest {
 	 }
 	 
 	 @Test public void test04TakeRemovesElementsFromTheQueue() {
-		Queue queue = queueWithSomething();
-		queue.take();
-		assertTrue( queue.isEmpty() );
+	    Queue queue = queueWithSomething();
+	    queue.take();
+	    assertTrue( queue.isEmpty() );
 	 }
 
 	 @Test public void test05TakeReturnsLastAddedObject() {
@@ -58,9 +58,9 @@ public class QueueTest {
 	 } 
 
 	 @Test public void test09CanNotTakeWhenThereAreNoObjectsInTheQueueAndTheQueueHadObjects() {
-		Queue queue = queueWithSomething();
-		queue.take();
-		assertThrowsLike(() -> queue.take(), EmptyQueueState.EmptyQueueMessage);
+	    Queue queue = queueWithSomething();
+	    queue.take();
+	    assertThrowsLike(() -> queue.take(), EmptyQueueState.EmptyQueueMessage);
 	 }
 
 	 @Test public void test10CanNotHeadWhenThereAreNoObjectsInTheQueue() {
