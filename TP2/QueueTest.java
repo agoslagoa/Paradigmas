@@ -10,10 +10,6 @@ import org.junit.jupiter.api.function.Executable;
 
 public class QueueTest {
 
-	 private static String Something = "Something";
-	 private static String FirstAddedObject = "First";
-	 private static String SecondAddedObject = "Second";
-
 	 @Test public void test01QueueShouldBeEmptyWhenCreated() {
 	    assertTrue( new Queue().isEmpty() );
 	 }
@@ -22,7 +18,7 @@ public class QueueTest {
 	    assertFalse( queueWithSomething().isEmpty() );
 	 }
 	 @Test public void test03AddedElementsIsAtHead() {
-	    assertEquals( Something, queueWithSomething().head() );
+	    assertEquals( "Something" , queueWithSomething().head() );
 	 }
 
 	 @Test public void test04TakeRemovesElementsFromTheQueue() {
@@ -30,18 +26,18 @@ public class QueueTest {
 	 }
 
 	 @Test public void test05TakeReturnsLastAddedObject() {
-	    assertEquals( Something , queueWithSomething().take() );
+	    assertEquals( "Something" , queueWithSomething().take() );
 	 }
 
 	 @Test public void test06QueueBehavesFIFO() {
 	    Queue queue = queueWithFirstAndSecondObjects();
-	    assertEquals( queue.take(), FirstAddedObject );
-	    assertEquals( queue.take(), SecondAddedObject );
+	    assertEquals( queue.take(), "First" );
+	    assertEquals( queue.take(), "Second" );
 	    assertTrue( queue.isEmpty() );
 	 }
 
 	 @Test public void test07HeadReturnsFirstAddedObjectAddedObject() {
-	    assertEquals( queueWithFirstAndSecondObjects().head(), FirstAddedObject );
+	    assertEquals( queueWithFirstAndSecondObjects().head(), "First" );
 	 }
 
 	 @Test public void test08HeadDoesNotRemoveObjectFromQueue() {
@@ -69,14 +65,14 @@ public class QueueTest {
 	  
 	 private Queue queueWithSomething() {
 	     Queue queue = new Queue();
-	     queue.add( Something );
+	     queue.add( "Something" );
 	     return queue;
 	 }
 	  
 	 private Queue queueWithFirstAndSecondObjects() { 
 	     Queue queue = new Queue();
-	     queue.add( FirstAddedObject);
-	     queue.add( SecondAddedObject);
+	     queue.add( "First");
+	     queue.add( "Second");
 	     return queue;
 	 }
 	  
