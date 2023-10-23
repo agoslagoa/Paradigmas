@@ -2,247 +2,175 @@ package nemo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
+import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.Test;
 
-public class SubmarineTest {
-
-    
+public class SubmarineTest {	
+   
 	@Test public void test01InitializeNemoAtSurfaceWithDefaultOrientation() {
-        // Creamos una instancia de Nemo
-        Submarine nemo = new Submarine( new Position(0,0), new NorthOrientation() );
-
-        // Verificamos que el submarino comienza en la superficie (profundidad 0)
-        assertEquals( 0, nemo.getDepth() );
-
-        // Verificamos la posición inicial en el sistema cartesiano (x, y)
-        assertEquals( 0, nemo.getPosition().getX() );
-        assertEquals( 0, nemo.getPosition().getY() );
-
-        // Verificamos que el submarino comienza mirando hacia el norte
-        assertEquals("N", nemo.getOrientation());
+		assertSubmarineStateAtSpecificCoordinates(new Submarine( new Position(0,0), new NorthOrientation() ), new Position(0,0), 0, "N");
     }
 	
 	@Test public void test02CreateNemoAtSpecificCoordinatesOtherThan00() {
-		Submarine nemo = new Submarine( new Position(10,8), new EastOrientation() );
-		
-		// Verificamos que el submarino comienza en la superficie (profundidad 0)
-        assertEquals( 0, nemo.getDepth() );
+		assertSubmarineStateAtSpecificCoordinates(new Submarine( new Position(10,8), new EastOrientation() ), new Position(10,8), 0, "E");
+	}
 
-        // Verificamos la posición inicial en el sistema cartesiano (x, y)
-        assertEquals( 10, nemo.getPosition().getX() );
-        assertEquals( 8, nemo.getPosition().getY() );
-
-        // Verificamos que el submarino comienza mirando hacia el este
-        assertEquals("E", nemo.getOrientation());
-	} 
-    
-	@Test public void test03NemoDoesNotMoveWithoutReceivingInstructions() {
-		Submarine nemo = new Submarine( new Position(0,0), new NorthOrientation() );
-	    String emptyInstruction = "";
-	    nemo.processInstruction(emptyInstruction); // Llamamos al método para procesar la instrucción
-	    
-        assertEquals( 0, nemo.getDepth());
-		assertEquals( 0, nemo.getPosition().getX() );
-		assertEquals( 0, nemo.getPosition().getY() );
+	@Test public void test03NemoStaysInPlaceWithoutInstructions() {
+		checkSubmarineStateAfterProccesingInstruction(new Submarine( new Position(0,0), new NorthOrientation() ), "", new Position(0,0), 0, "N");
 	} 
 	
 	@Test public void test04RotateRightFromNorth() {
-		Submarine nemo = new Submarine( new Position(0,0), new NorthOrientation() );
-	    nemo.processInstruction("r"); // Girar a la derecha
-	    assertEquals("E", nemo.getOrientation()); // Debe estar mirando hacia el este
+		checkSubmarineStateAfterRotationInstruction(new Submarine( new Position(0,0), new NorthOrientation() ), "r", "E");
 	}
-	
+
 	@Test public void test05RotateRightFromEast() {
-		Submarine nemo = new Submarine( new Position(0,0), new EastOrientation() );
-	    nemo.processInstruction("r"); // Girar a la derecha
-	    assertEquals("S", nemo.getOrientation()); // Debe estar mirando hacia el sur
+		checkSubmarineStateAfterRotationInstruction(new Submarine( new Position(0,0), new EastOrientation() ), "r", "S");
 	}
 	
 	@Test public void test06RotateRightFromSouth() {
-		Submarine nemo = new Submarine( new Position(0,0), new SouthOrientation() );
-	    nemo.processInstruction("r"); // Girar a la derecha
-	    assertEquals("W", nemo.getOrientation()); // Debe estar mirando hacia el oeste
+		checkSubmarineStateAfterRotationInstruction(new Submarine( new Position(0,0), new SouthOrientation() ), "r", "W");
 	}
 	
 	@Test public void test07RotateRightFromWest() {
-		Submarine nemo = new Submarine( new Position(0,0), new WestOrientation() );
-	    nemo.processInstruction("r"); // Girar a la derecha
-	    assertEquals("N", nemo.getOrientation()); // Debe estar mirando hacia el norte
+		checkSubmarineStateAfterRotationInstruction(new Submarine( new Position(0,0), new WestOrientation() ), "r", "N");
 	}
 	
 	@Test public void test08RotateLeftFromNorth() {
-		Submarine nemo = new Submarine( new Position(0,0), new NorthOrientation() );
-	    nemo.processInstruction("l"); // Girar a la izquuerda
-	    assertEquals("W", nemo.getOrientation()); // Debe estar mirando hacia el oeste
+		checkSubmarineStateAfterRotationInstruction(new Submarine( new Position(0,0), new NorthOrientation() ), "l", "W");
 	}
 	
 	@Test public void test09RotateLeftFromWest() {
-		Submarine nemo = new Submarine( new Position(0,0), new WestOrientation() );
-	    nemo.processInstruction("l"); // Girar a la izquierda
-	    assertEquals("S", nemo.getOrientation()); // Debe estar mirando hacia el sur
+		checkSubmarineStateAfterRotationInstruction(new Submarine( new Position(0,0), new WestOrientation() ), "l", "S");
 	}
 	
 	@Test public void test10RotateLeftFromSouth() {
-		Submarine nemo = new Submarine( new Position(0,0), new SouthOrientation() );
-	    nemo.processInstruction("l"); // Girar a la izquierda
-	    assertEquals("E", nemo.getOrientation()); // Debe estar mirando hacia el este
+		checkSubmarineStateAfterRotationInstruction(new Submarine( new Position(0,0), new SouthOrientation() ), "l", "E");
 	}
 	
 	@Test public void test11RotateLeftFromEast() {
-		Submarine nemo = new Submarine( new Position(0,0), new EastOrientation() );
-	    nemo.processInstruction("l"); // Girar a la izquierda
-	    assertEquals("N", nemo.getOrientation()); // Debe estar mirando hacia el norte
+		checkSubmarineStateAfterRotationInstruction(new Submarine( new Position(0,0), new EastOrientation() ), "l", "N");
 	}
 	
 	@Test public void test12MoveForwardFromNorth() {
-		Submarine nemo = new Submarine( new Position(0,0), new NorthOrientation() );
-	    nemo.processInstruction("f"); // Mover hacia adelante (norte)
-	    assertEquals(1, nemo.getPosition().getY());
+		checkSubmarineStateAfterMoveForwardInstruction(new Submarine( new Position(0,0), new NorthOrientation() ), new Position(0,1));
 	}
 	
 	@Test public void test13MoveForwardFromEast() {
-		Submarine nemo = new Submarine( new Position(0,0), new EastOrientation() );
-	    nemo.processInstruction("f"); // Mover hacia adelante (norte)
-	    assertEquals(1, nemo.getPosition().getX());
+		checkSubmarineStateAfterMoveForwardInstruction(new Submarine( new Position(0,0), new EastOrientation() ), new Position(1,0));
 	}
 	
 	@Test public void test14MoveForwardFromSouth() {
-		Submarine nemo = new Submarine( new Position(0,0), new SouthOrientation() );
-	    nemo.processInstruction("f"); // Mover hacia adelante (norte)
-	    assertEquals(-1, nemo.getPosition().getY());
+		checkSubmarineStateAfterMoveForwardInstruction(new Submarine( new Position(0,0), new SouthOrientation() ), new Position(0,-1));
 	}
 	
 	@Test public void test15MoveForwardFromWest() {
-		Submarine nemo = new Submarine( new Position(0,0), new WestOrientation() );
-	    nemo.processInstruction("f"); // Mover hacia adelante (norte)
-	    assertEquals(-1, nemo.getPosition().getX());
+		checkSubmarineStateAfterMoveForwardInstruction(new Submarine( new Position(0,0), new WestOrientation() ), new Position(-1,0));
 	}
-	
-	@Test public void test16AssertAscendAtSurfaceShouldKeepDepthAt0() {
-		Submarine nemo = new Submarine( new Position(0,0), new NorthOrientation() );
-	    nemo.processInstruction("u"); // Intento de ascender desde la superficie
-	    assertEquals(0, nemo.getDepth()); // Debe permanecer en la superficie (profundidad 0)
-	}
-	
-	@Test public void test17AssertDescendAtSurface() {
-		Submarine nemo = new Submarine( new Position(0,0), new NorthOrientation() );
-	    nemo.processInstruction("d"); 
-	    assertEquals(1, nemo.getDepth()); 
-	}
-	
-	@Test public void test18AssertAscendFromDepth() {
-		Submarine nemo = new Submarine( new Position(0,0), new NorthOrientation() );
-	    nemo.processInstruction("d"); 
-	    assertEquals(1, nemo.getDepth()); 
-	    
-	    nemo.processInstruction("u"); 
-	    assertEquals(0, nemo.getDepth()); 
-	}
-	
-	@Test public void test19AssertCommandSequence() {
-		Submarine nemo = new Submarine( new Position(0,0), new NorthOrientation() );
 
-	    nemo.processInstruction("flfdum");
+	@Test public void test16AscendAtSurfaceKeepsDepthAt0() {
+		checkSubmarineStateAfterAscendInstruction(new Submarine( new Position(0,0), new NorthOrientation() ), 0); 
+	}
 
-	    // Verificar el estado final del submarino después de ejecutar la secuencia de comandos
-	    assertEquals(1, nemo.getPosition().getY());         // Debe estar en la posición Y = 1
-	    assertEquals("W", nemo.getOrientation()); // Debe estar mirando hacia el oeste
-	    assertEquals(-1, nemo.getPosition().getX());         // Debe estar en la posición X = -1
-	    assertEquals(0, nemo.getDepth());     // Debe ascender (profundidad 0)
+	@Test public void test17DescendAtSurface() {
+		checkSubmarineStateAfterDescendInstruction(new Submarine( new Position(0,0), new NorthOrientation() ), 1); 
 	}
 	
-	@Test public void Test20PerformingLargeCommandSequences() {
+	@Test public void test18AscendFromDepth() {
 		Submarine nemo = new Submarine( new Position(0,0), new NorthOrientation() );
+		checkSubmarineStateAfterDescendInstruction(nemo, 1); 
+		checkSubmarineStateAfterAscendInstruction(nemo, 0); 
+	}
 
-	    nemo.processInstruction("ffddrffffuumlfflffdd");
-	    
-	    assertEquals(2, nemo.getDepth());
-		assertEquals(2, nemo.getPosition().getX());
-	    assertEquals(4, nemo.getPosition().getY());
-		assertEquals("W", nemo.getOrientation());
+	@Test public void test19CommandSequence() {
+		checkSubmarineStateAfterProccesingInstruction(new Submarine( new Position(0,0), new NorthOrientation() ), "flfdum", new Position(-1,1), 0, "W");
+	}
+
+	@Test public void Test20PerformLargeCommandSequences() {
+		checkSubmarineStateAfterProccesingInstruction(new Submarine( new Position(0,0), new NorthOrientation() ), "ffddrffffuumlfflffdd", new Position(2,4), 2, "W");
 	}
 	
 	@Test public void Test21AscendRepeatedlyAtSurfaceDoesNotAffectSubmarine() {
-		Submarine nemo = new Submarine(new Position(0, 0), new NorthOrientation());
-
-	    nemo.processInstruction("uuuuu");
-
-	    assertEquals(0, nemo.getDepth());
+		checkSubmarineStateAfterProccesingInstruction(new Submarine(new Position(0, 0), new NorthOrientation()), "uuuuu", new Position(0,0), 0, "N");
 	}
 	
 	@Test public void Test22DescendExcessivelyDoesNotAffectSubmarine() {
-		Submarine nemo = new Submarine(new Position(0, 0), new NorthOrientation());
-
-	    nemo.processInstruction("dddddddddddddddddddd");
-	    
-	    assertEquals(20, nemo.getDepth());
+		checkSubmarineStateAfterProccesingInstruction(new Submarine(new Position(0, 0), new NorthOrientation()), "dddddddddddddddddddd", new Position(0,0), 20, "N");
 	}
 	
 	@Test public void test23MaintainDepthWhileMovingForwardInLine() {
-	    Submarine nemo = new Submarine( new Position(0,0), new NorthOrientation() );
-	    
-	    nemo.processInstruction("fddff");
-	    assertEquals(3, nemo.getPosition().getY());
-	    assertEquals(2, nemo.getDepth());
+		checkSubmarineStateAfterProccesingInstruction(new Submarine( new Position(0,0), new NorthOrientation() ), "fddff", new Position(0,3), 2, "N");
 	} 
 	
 	@Test public void test24ReleasingCapsuleAtSafeDepthDoesNotAffectNemo() {
-		Submarine nemo = new Submarine( new Position(0,0), new NorthOrientation() );
-		
-		nemo.processInstruction("fdfrf");
-		
-		assertEquals(1, nemo.getDepth());
-		assertEquals(1, nemo.getPosition().getX());
-		assertEquals(2, nemo.getPosition().getY());
-		assertEquals("E", nemo.getOrientation());
-		
-		nemo.processInstruction("m");
-		
-		assertEquals(1, nemo.getDepth());
-		assertEquals(2, nemo.getPosition().getY());
-		assertEquals(1, nemo.getPosition().getX());
-		assertEquals("E", nemo.getOrientation());
+		Submarine nemo = new Submarine( new Position(0,0), new NorthOrientation() );		
+		checkSubmarineStateAfterProccesingInstruction(nemo, "fdfrf", new Position(1,2), 1, "E");
+		checkSubmarineStateAfterProccesingInstruction(nemo, "m", new Position(1,2), 1, "E");
 	}
-	
+
 	@Test public void test25NemoCanRotate360DegreesRight() {
 		Submarine nemo = new Submarine( new Position(0,0), new NorthOrientation() );
 		
 		assertEquals("N", nemo.getOrientation());
-		nemo.processInstruction("rrrr");
+		checkSubmarineStateAfterProccesingInstruction(nemo, "rrrr", new Position(0,0), 0, "N");
 		assertEquals("N", nemo.getOrientation());
-		
 	}
 	
 	@Test public void test26NemoCanRotate360DegreesLeft() {
 		Submarine nemo = new Submarine( new Position(0,0), new NorthOrientation() );
 		
 		assertEquals("N", nemo.getOrientation());
-		nemo.processInstruction("llll");
+		checkSubmarineStateAfterProccesingInstruction(nemo, "llll", new Position(0,0), 0, "N");
 		assertEquals("N", nemo.getOrientation());
 	}
 	
 	@Test public void test27ReleasingCapsuleAtUnsafeDepthDestructsNemo() { 
-		Submarine nemo = new Submarine( new Position(0,0), new NorthOrientation() );
-
-	    // Descender a profundidad 2 o mayor ('ddm') y liberar la cápsula hace que Nemo explote
-	    assertThrows(IllegalStateException.class, () -> {
-	        nemo.processInstruction("ddm");
-	    });
+		assertThrowsLike(()-> new Submarine( new Position(0,0), new NorthOrientation() ).processInstruction("ddm"), NonShootableDepth.ChocolateBrownieException);
 	}
 	
-	@Test public void test28AssertCommandSequenceResultingInNemoDestruction() {
-//		NemoPosition initialPosition = new NemoPosition(0, 0);
+	@Test public void test28CommandSequenceResultingInNemoDestruction() {
 	    Submarine nemo = new Submarine( new Position(0,0), new NorthOrientation() );
-	    
-	    nemo.processInstruction("frdf");
-	    assertEquals("E", nemo.getOrientation());
-	    assertEquals(1, nemo.getPosition().getX());
-		assertEquals(1, nemo.getPosition().getY());
-
-	    // Ejecutar una secuencia de comandos que intenta liberar la cápsula a profundidad 3 o mayor 
-	    assertThrows(IllegalStateException.class, () -> {
-	        nemo.processInstruction("ddm");
-	    });
-	} 
+	    checkSubmarineStateAfterProccesingInstruction(nemo, "frdf", new Position(1,1), 1, "E");
+		assertThrowsLike(()-> nemo.processInstruction("ddm"), NonShootableDepth.ChocolateBrownieException);
+	}
+	
+	private void assertSubmarineStateAtSpecificCoordinates(Submarine nemo, Position expectedPosition, int expectedDepth, String expectedOrientation) {
+	    assertEquals(expectedDepth, nemo.getDepth());
+	    assertEquals(expectedPosition.getX(), nemo.getPosition().getX());
+	    assertEquals(expectedPosition.getY(), nemo.getPosition().getY());
+	    assertEquals(expectedOrientation, nemo.getOrientation());
+	}
+	
+	private void checkSubmarineStateAfterRotationInstruction(Submarine nemo, String instruction, String expectedOrientation) {
+	    nemo.processInstruction(instruction);
+	    assertEquals(expectedOrientation, nemo.getOrientation());
+	}
+	
+	private void checkSubmarineStateAfterAscendInstruction(Submarine nemo, int expectedDepth) {
+	    nemo.processInstruction("u");
+	    assertEquals(expectedDepth, nemo.getDepth());
+	}
+	
+	private void checkSubmarineStateAfterDescendInstruction(Submarine nemo, int expectedDepth) {
+	    nemo.processInstruction("d");
+	    assertEquals(expectedDepth, nemo.getDepth());
+	}
+	
+	private void checkSubmarineStateAfterMoveForwardInstruction(Submarine nemo, Position expectedPosition) {
+		nemo.processInstruction("f"); 
+	    assertEquals(expectedPosition.getX(), nemo.getPosition().getX());
+	    assertEquals(expectedPosition.getY(), nemo.getPosition().getY());
+	}
+	
+	private void checkSubmarineStateAfterProccesingInstruction(Submarine nemo, String instruction, Position expectedPosition, int expectedDepth, String expectedOrientation) {
+	    nemo.processInstruction(instruction);
+	    assertEquals(expectedDepth, nemo.getDepth());
+	    assertEquals(expectedPosition.getX(), nemo.getPosition().getX());
+	    assertEquals(expectedPosition.getY(), nemo.getPosition().getY());
+	    assertEquals(expectedOrientation, nemo.getOrientation());
+	}
+	
+	private void assertThrowsLike( Executable executable, String message ) {
+		assertEquals( message, assertThrows( Exception.class, executable ).getMessage() );
+	}
+	
 } 
