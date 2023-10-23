@@ -6,13 +6,13 @@ public class Submarine {
 	
     protected ArrayList<DepthManager> depthStates = new ArrayList<>(); 
     
-    private Position currentPosition;			// Posición del submarino en el eje cartesiano
-    private Orientation currentOrientation; 	// Orientación del submarino (N, S, E, W)
-    private DepthManager currentDepthState = new ShootableSurface(); // Estado de profundidad actual
+    private Position currentPosition;	
+    private Orientation currentOrientation; 	
+    private DepthManager currentDepthState = new ShootableSurface(); 
     
     public Submarine( Position initialCoordinates, Orientation initialOrientation ) {
-        currentPosition = initialCoordinates;		// inicializa la posición
-        currentOrientation = initialOrientation; 	// Inicializa la orientación
+        currentPosition = initialCoordinates;	
+        currentOrientation = initialOrientation; 
         
         depthStates.add(currentDepthState);
     }
